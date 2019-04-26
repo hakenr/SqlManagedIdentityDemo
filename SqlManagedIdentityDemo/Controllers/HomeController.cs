@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -8,10 +11,30 @@ namespace SqlManagedIdentityDemo.Controllers
 {
 	public class HomeController : Controller
 	{
-		public ActionResult Index()
+		public async Task<ActionResult> Index()
 		{
-			return View();
+			try
+			{
+				using var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+
+				connection.Open();
+
+				using var cmd = new SqlCommand("SELECT suser_name()", connection);
+
+				var sqlUser = await cmd.ExecuteScalarAsync();
+
+				return View(sqlUser);
+			}
+			catch
+			{
+				return View((object)"FAIL");
+			}
 		}
+
+
+
+
+
 
 		public ActionResult About()
 		{
