@@ -17,6 +17,8 @@ namespace SqlManagedIdentityDemo.Controllers
 			{
 				using var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
 
+				//connection.AccessToken = await new AzureServiceTokenProvider().GetAccessTokenAsync("https://database.windows.net/");
+
 				connection.Open();
 
 				using var cmd = new SqlCommand("SELECT suser_name()", connection);
